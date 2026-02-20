@@ -10,8 +10,8 @@ import Preloader from "@/components/Preloader";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "River - Crypto Trading & Investments",
-  description: "River — Crypto trading and investments",
+  title: "Sterling - Crypto Trading & Investments Brokerage",
+  description: "Sterling — Crypto trading and investments",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

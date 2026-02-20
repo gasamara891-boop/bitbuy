@@ -2,8 +2,8 @@
 import React from "react";
 
 export const metadata = {
-  title: "User Dashboard | Bitbuy Investment",
-  description: "Manage your investments and track profits on Neurax Tech.",
+  title: "User Dashboard | Sterling Investment",
+  description: "Manage your investments and track profits on Sterling.",
 };
 
 export default function ProfileLayout({

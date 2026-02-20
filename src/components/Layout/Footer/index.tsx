@@ -40,7 +40,7 @@ const Footer: FC = () => {
               </Link>
             </div>
             <h3 className="text-white text-24 font-medium sm:mt-20 mt-12">
-              2025 Copyright | Bitbuy
+              2025 Copyright | Sterling
             </h3>
           </div>
 
@@ -67,15 +67,15 @@ const Footer: FC = () => {
             <ul className="text-17 text-white space-y-4">
               <li className="flex items-start gap-3">
                 <Icon icon="mdi:map-marker" width="20" height="20" className="text-primary mt-1" />
-                <span>123 CA, New York</span>
+                <span>Block A Blvd CA, New York</span>
               </li>
               <li className="flex items-center gap-3">
                 <Icon icon="mdi:phone" width="20" height="20" className="text-primary" />
-                <span>+151476383923</span>
+                <span>+1514763823</span>
               </li>
               <li className="flex items-center gap-3">
                 <Icon icon="mdi:email" width="20" height="20" className="text-primary" />
-                <span>support@Bitbuy.com</span>
+                <span>support@sterlingbrokerage.com</span>
               </li>
             </ul>
           </div>

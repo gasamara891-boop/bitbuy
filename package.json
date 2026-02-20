@@ -1,5 +1,5 @@
 {
-  "name": "bitbuy",
+  "name": "sterling",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -32,6 +32,7 @@
     "react-dom": "^18",
     "react-hot-toast": "^2.6.0",
     "react-i18next": "^16.2.3",
+    "react-router-dom": "^7.13.0",
     "react-slick": "^0.30.2",
     "recharts": "^3.3.0",
     "remark": "^15.0.1",

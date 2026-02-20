@@ -24,7 +24,7 @@ export default function Logo() {
     >
       <Image
         src={`${getImagePrefix()}images/logo/logo.png`}
-        alt="bitbuy  Logo"
+        alt="sterling  Logo"
         width={167}
         height={60}
         style={{
