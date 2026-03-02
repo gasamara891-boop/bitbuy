@@ -50,6 +50,11 @@ const Header: React.FC = () => {
     }
   };
 
+  // Close navbar when route changes
+  useEffect(() => {
+    setNavbarOpen(false);
+  }, [pathUrl]);
+
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     document.addEventListener("mousedown", handleClickOutside);
@@ -57,7 +62,7 @@ const Header: React.FC = () => {
       window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [navbarOpen, menuRef.current]);
+  }, [navbarOpen]);
 
   useEffect(() => {
     if (navbarOpen) {
@@ -67,16 +72,22 @@ const Header: React.FC = () => {
     }
   }, [navbarOpen]);
 
+  // Close navbar
+  const closeNavbar = () => {
+    setNavbarOpen(false);
+  };
+
   // navigate to profile
   const goToDashboard = () => {
     setMenuOpen(false);
+    closeNavbar();
     router.push("/profile");
   };
 
   const signOut = async () => {
     setMenuOpen(false);
+    closeNavbar();
     await fetch("/api/auth/signout", { method: "POST" }).catch(() => {});
-    // fallback to supabase client signOut if you prefer
     try {
       const { supabase } = await import("@/lib/supabaseClient");
       await supabase.auth.signOut();
@@ -97,7 +108,10 @@ const Header: React.FC = () => {
       >
         <div className="lg:py-0 py-2">
           <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md flex items-center justify-between px-4">
-            <Logo />
+            {/* Logo - just the component, no Link wrapper */}
+            <div onClick={() => closeNavbar()}>
+              <Logo />
+            </div>
 
             {/* Desktop navigation */}
             <nav className="hidden lg:flex flex-grow items-center gap-8 justify-center">
@@ -113,7 +127,7 @@ const Header: React.FC = () => {
                 <div className="relative" ref={menuRef}>
                   <button
                     onClick={() => setMenuOpen((s) => !s)}
-                    className="hidden lg:flex items-center gap-3 bg-transparent border border-transparent px-3 py-1 rounded-md hover:bg-slate-800"
+                    className="hidden lg:flex items-center gap-3 bg-transparent border border-transparent px-3 py-1 rounded-md hover:bg-slate-800 transition-colors"
                     aria-haspopup="true"
                     aria-expanded={menuOpen}
                   >
@@ -149,16 +163,20 @@ const Header: React.FC = () => {
                       <div className="p-2">
                         <button
                           onClick={goToDashboard}
-                          className="w-full text-left px-3 py-2 rounded-md hover:bg-slate-800"
+                          className="w-full text-left px-3 py-2 rounded-md hover:bg-slate-800 transition-colors"
                         >
                           Dashboard
                         </button>
-                        <Link href="/profile" className="block px-3 py-2 rounded-md hover:bg-slate-800">
+                        <Link 
+                          href="/profile" 
+                          className="block px-3 py-2 rounded-md hover:bg-slate-800 transition-colors"
+                          onClick={() => setMenuOpen(false)}
+                        >
                           View Profile
                         </Link>
                         <button
                           onClick={signOut}
-                          className="w-full text-left px-3 py-2 rounded-md hover:bg-slate-800 text-red-400"
+                          className="w-full text-left px-3 py-2 rounded-md hover:bg-slate-800 transition-colors text-red-400"
                         >
                           Sign Out
                         </button>
@@ -174,7 +192,7 @@ const Header: React.FC = () => {
                       setAuthView("login");
                       setAuthOpen(true);
                     }}
-                    className="hidden lg:block bg-transparent text-primary border hover:bg-primary border-primary hover:text-darkmode px-4 py-2 rounded-lg"
+                    className="hidden lg:block bg-transparent text-primary border hover:bg-primary border-primary hover:text-darkmode px-4 py-2 rounded-lg transition-all"
                   >
                     Sign In
                   </button>
@@ -183,7 +201,7 @@ const Header: React.FC = () => {
                       setAuthView("signup");
                       setAuthOpen(true);
                     }}
-                    className="hidden lg:block bg-primary text-darkmode hover:bg-transparent hover:text-primary border border-primary px-4 py-2 rounded-lg"
+                    className="hidden lg:block bg-primary text-darkmode hover:bg-transparent hover:text-primary border border-primary px-4 py-2 rounded-lg transition-all"
                   >
                     Sign Up
                   </button>
@@ -193,7 +211,7 @@ const Header: React.FC = () => {
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setNavbarOpen(!navbarOpen)}
-                className="block lg:hidden p-2 rounded-lg"
+                className="block lg:hidden p-2 rounded-lg hover:bg-slate-800 transition-colors"
                 aria-label="Toggle mobile menu"
               >
                 <span className="block w-6 h-0.5 bg-white"></span>
@@ -205,7 +223,10 @@ const Header: React.FC = () => {
 
           {/* Overlay */}
           {navbarOpen && (
-            <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-40" />
+            <div 
+              className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-40"
+              onClick={() => setNavbarOpen(false)}
+            />
           )}
 
           {/* Mobile Menu */}
@@ -221,71 +242,78 @@ const Header: React.FC = () => {
               </h2>
               <button
                 onClick={() => setNavbarOpen(false)}
-                className="bg-[url('/images/closed.svg')] bg-no-repeat bg-contain w-5 h-5 absolute top-0 right-0 mr-8 mt-8 "
+                className="bg-[url('/images/closed.svg')] bg-no-repeat bg-contain w-5 h-5 absolute top-0 right-0 mr-8 mt-8"
                 aria-label="Close menu Modal"
               ></button>
             </div>
 
-            <nav className="flex flex-col items-start p-4">
+            <nav className="flex flex-col items-start p-4 w-full">
               {headerData.map((item, index) => (
-                <MobileHeaderLink key={index} item={item} />
+                <MobileHeaderLink 
+                  key={index} 
+                  item={item}
+                  onLinkClick={closeNavbar}
+                />
               ))}
-              <div className="mt-4 flex flex-col space-y-4 w-full">
-                {user ? (
-                  <>
-                    <button
-                      onClick={() => {
-                        setNavbarOpen(false);
-                        router.push("/profile");
-                      }}
-                      className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                    >
-                      Dashboard
-                    </button>
-                    <button
-                      onClick={async () => {
-                        try {
-                          const { supabase } = await import("@/lib/supabaseClient");
-                          await supabase.auth.signOut();
-                        } catch {}
-                        router.push("/");
-                      }}
-                      className="bg-transparent border border-primary text-primary px-4 py-2 rounded-lg hover:bg-blue-600 hover:text-white"
-                    >
-                      Sign Out
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      onClick={() => {
-                        setAuthView("login");
-                        setAuthOpen(true);
-                        setNavbarOpen(false);
-                      }}
-                      className="bg-transparent border border-primary text-primary px-4 py-2 rounded-lg hover:bg-blue-600 hover:text-white"
-                    >
-                      Sign In
-                    </button>
-                    <button
-                      onClick={() => {
-                        setAuthView("signup");
-                        setAuthOpen(true);
-                        setNavbarOpen(false);
-                      }}
-                      className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                    >
-                      Sign Up
-                    </button>
-                  </>
-                )}
-              </div>
             </nav>
+
+            {/* Mobile Auth Buttons */}
+            <div className="mt-4 flex flex-col space-y-4 w-full px-4">
+              {user ? (
+                <>
+                  <button
+                    onClick={() => {
+                      closeNavbar();
+                      router.push("/profile");
+                    }}
+                    className="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  >
+                    Dashboard
+                  </button>
+                  <button
+                    onClick={async () => {
+                      closeNavbar();
+                      try {
+                        const { supabase } = await import("@/lib/supabaseClient");
+                        await supabase.auth.signOut();
+                      } catch {}
+                      router.push("/");
+                    }}
+                    className="w-full bg-transparent border border-primary text-primary px-4 py-2 rounded-lg hover:bg-blue-600 hover:text-white transition-all font-medium"
+                  >
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => {
+                      setAuthView("login");
+                      setAuthOpen(true);
+                      closeNavbar();
+                    }}
+                    className="w-full bg-transparent border border-primary text-primary px-4 py-2 rounded-lg hover:bg-blue-600 hover:text-white transition-all font-medium"
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    onClick={() => {
+                      setAuthView("signup");
+                      setAuthOpen(true);
+                      closeNavbar();
+                    }}
+                    className="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  >
+                    Sign Up
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Modal placed here so it can be opened from header */}
+      {/* Modal */}
       <AuthModal open={authOpen} initialView={authView} onClose={() => setAuthOpen(false)} />
     </>
   );

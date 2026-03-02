@@ -27,8 +27,8 @@ const TimeLine = () => {
               Investment <span className="text-primary">timeline</span> 
             </p>
             <h2 className="text-white sm:text-40 text-30 font-medium lg:w-80% mx-auto mb-20">
-              We can enter at any point or help you all the way through the
-in your investments journey.
+              We can enter at any point and help you all the way through 
+ your investments journey.
             </h2>
           </motion.div>
           <motion.div
